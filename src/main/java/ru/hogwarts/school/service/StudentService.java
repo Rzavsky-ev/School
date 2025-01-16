@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.EntityNotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
@@ -23,12 +24,16 @@ public class StudentService {
     }
 
     public Student findStudent(Long id) {
-        return studentRepository.getReferenceById(id);
+        Student studentFind = studentRepository.getReferenceById(id);
+        if (studentFind == null) {
+            throw new EntityNotFoundException();
+        }
+        return studentFind;
     }
 
     public Faculty getStudentFaculty(Long id) {
         if (studentRepository.getReferenceById(id) == null) {
-            return null;
+            throw new EntityNotFoundException();
         }
         return studentRepository.getReferenceById(id).getFaculty();
     }
@@ -43,17 +48,24 @@ public class StudentService {
 
     public Student editStudent(Student student) {
         if (studentRepository.getReferenceById(student.getId()) == null) {
-            return null;
+            throw new EntityNotFoundException();
         }
         return studentRepository.save(student);
     }
 
     public Collection<Student> findByAgeBetween(int minAge, int maxAge) {
-        return studentRepository.findByAgeBetween(minAge, maxAge);
+        Collection<Student> students = studentRepository.findByAgeBetween(minAge, maxAge);
+        if (students.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        return students;
     }
 
     public Student removeStudent(Long id) {
         Student studentRemove = studentRepository.getReferenceById(id);
+        if (studentRemove == null) {
+            throw new EntityNotFoundException();
+        }
         studentRepository.delete(studentRemove);
         return studentRemove;
     }

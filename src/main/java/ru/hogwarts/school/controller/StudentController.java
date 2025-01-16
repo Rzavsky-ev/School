@@ -20,31 +20,19 @@ public class StudentController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Student> findFaculty(@PathVariable("id") Long id) {
-        Student studentFind = studentService.findStudent(id);
-        if (studentFind == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(studentFind);
+    public Student findFaculty(@PathVariable("id") Long id) {
+        return studentService.findStudent(id);
     }
 
     @GetMapping(path = "/find")
-    public ResponseEntity<Collection<Student>> findByAgeBetween(@RequestParam int minAge,
-                                                                @RequestParam int maxAge) {
-        Collection<Student> students = studentService.findByAgeBetween(minAge, maxAge);
-        if (students.isEmpty()) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(students);
+    public Collection<Student> findByAgeBetween(@RequestParam int minAge,
+                                                @RequestParam int maxAge) {
+        return studentService.findByAgeBetween(minAge, maxAge);
     }
 
     @GetMapping(path = "faculty/{id}")
-    public ResponseEntity<Faculty> getStudentFaculty(@PathVariable("id") Long id) {
-        Faculty studentFaculty = studentService.getStudentFaculty(id);
-        if (studentFaculty == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(studentFaculty);
+    public Faculty getStudentFaculty(@PathVariable("id") Long id) {
+        return studentService.getStudentFaculty(id);
     }
 
     @GetMapping(path = "/all")
@@ -58,20 +46,12 @@ public class StudentController {
     }
 
     @PutMapping
-    public ResponseEntity<Student> editStudent(@RequestBody Student student) {
-        Student studentEdit = studentService.editStudent(student);
-        if (studentEdit == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(studentEdit);
+    public Student editStudent(@RequestBody Student student) {
+        return studentService.editStudent(student);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> removeFaculty(@PathVariable("id") Long id) {
-        Student studentRemove = studentService.removeStudent(id);
-        if (studentRemove == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().build();
+    public Student removeFaculty(@PathVariable("id") Long id) {
+        return studentService.removeStudent(id);
     }
 }
