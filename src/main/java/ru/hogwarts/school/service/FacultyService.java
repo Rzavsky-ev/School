@@ -2,11 +2,12 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+
 
 @Service
 public class FacultyService {
@@ -23,6 +24,14 @@ public class FacultyService {
 
     public Faculty findFaculty(Long id) {
         return facultyRepository.getReferenceById(id);
+    }
+
+    public Faculty findByName(String name) {
+        return facultyRepository.findByNameIgnoreCase(name);
+    }
+
+    public Collection<Student> getAllStudentsFaculty(Long id) {
+        return facultyRepository.getReferenceById(id).allStudentsFaculty();
     }
 
     public Collection<Faculty> getAll() {

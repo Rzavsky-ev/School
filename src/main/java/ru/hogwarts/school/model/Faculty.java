@@ -3,6 +3,11 @@ package ru.hogwarts.school.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class Faculty {
@@ -13,6 +18,9 @@ public class Faculty {
 
     private String name;
     private String color;
+
+    @OneToMany(mappedBy = "faculty")
+    private final List<Student> students = new ArrayList<>();
 
     public Faculty(Long id, String name, String color) {
         this.id = id;
@@ -44,9 +52,18 @@ public class Faculty {
         this.color = color;
     }
 
+    public Collection<Student> allStudentsFaculty() {
+        return students;
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+    }
+
     @Override
     public String toString() {
-        return "id=" + getId() + " name:" + getName() + " color:" + getColor();
+        return "id=" + getId() + " name:" + getName() +
+                " color:" + getColor() + " students" + students.toString();
     }
 }
 
