@@ -1,8 +1,8 @@
 package ru.hogwarts.school.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
@@ -19,12 +19,18 @@ public class FacultyController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Faculty> findFaculty(@PathVariable("id") Long id) {
-        Faculty facultyFind = facultyService.findFaculty(id);
-        if (facultyFind == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(facultyFind);
+    public Faculty findFaculty(@PathVariable("id") Long id) {
+        return facultyService.findFaculty(id);
+    }
+
+    @GetMapping("/name")
+    public Faculty findByName(@RequestParam String name) {
+        return facultyService.findByName(name);
+    }
+
+    @GetMapping("/allStudents/{id}")
+    public Collection<Student> getAllStudentsFaculty(@PathVariable("id") Long id) {
+        return facultyService.getAllStudentsFaculty(id);
     }
 
     @GetMapping(path = "/all")
@@ -38,21 +44,13 @@ public class FacultyController {
     }
 
     @PutMapping
-    public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
-        Faculty facultyEdit = facultyService.editFaculty(faculty);
-        if (facultyEdit == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(facultyEdit);
+    public Faculty editFaculty(@RequestBody Faculty faculty) {
+        return facultyService.editFaculty(faculty);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> removeFaculty(@PathVariable("id") Long id) {
-        Faculty facultyRemove = facultyService.removeFaculty(id);
-        if (facultyRemove == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().build();
+    public Faculty removeFaculty(@PathVariable("id") Long id) {
+        return facultyService.removeFaculty(id);
     }
 
 
