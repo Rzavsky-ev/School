@@ -19,6 +19,8 @@ public class Faculty {
     @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
     private final List<Student> students = new ArrayList<>();
 
+    public Faculty(){};
+
     public Faculty(Long id, String name, String color) {
         this.id = id;
         this.name = name;
