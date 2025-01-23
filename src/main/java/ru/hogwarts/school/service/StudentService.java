@@ -31,7 +31,7 @@ public class StudentService {
 
     public StudentService(StudentRepository studentRepository, AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
-        this.avatarRepository=avatarRepository;
+        this.avatarRepository = avatarRepository;
     }
 
     public Student addStudent(Student student) {
@@ -69,11 +69,7 @@ public class StudentService {
     }
 
     public Collection<Student> findByAgeBetween(int minAge, int maxAge) {
-        Collection<Student> students = studentRepository.findByAgeBetween(minAge, maxAge);
-        if (students.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
-        return students;
+        return studentRepository.findByAgeBetween(minAge, maxAge);
     }
 
     public Student removeStudent(Long id) {
