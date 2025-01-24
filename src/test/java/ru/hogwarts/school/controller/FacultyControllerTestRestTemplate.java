@@ -1,6 +1,7 @@
 package ru.hogwarts.school.controller;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +38,12 @@ public class FacultyControllerTestRestTemplate {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @AfterEach
+    public void resetDb() {
+        studentRepositoryTest.deleteAll();
+        facultyRepositoryTest.deleteAll();
+    }
+
     @Test
     void contextLoadsFacultyController() throws Exception {
         Assertions.assertThat(facultyControllerTest).isNotNull();
@@ -44,6 +51,7 @@ public class FacultyControllerTestRestTemplate {
 
     @Test
     public void testFindFaculty() throws Exception {
+
         Faculty faculty = new Faculty();
         faculty.setName("FEMA");
         faculty.setColor("Red");

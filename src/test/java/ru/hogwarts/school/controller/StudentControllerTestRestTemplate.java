@@ -1,6 +1,7 @@
 package ru.hogwarts.school.controller;
 
-import org.assertj.core.api.Assertions;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.hogwarts.school.model.Avatar;
@@ -23,6 +25,9 @@ import ru.hogwarts.school.repository.StudentRepositoryTest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @Transactional
@@ -45,9 +50,16 @@ public class StudentControllerTestRestTemplate {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+
+    @AfterEach
+    public void resetDb() {
+        studentRepositoryTest.deleteAll();
+        avatarRepositoryTest.deleteAll();
+    }
+
     @Test
     void contextLoadsStudentController() throws Exception {
-        Assertions.assertThat(studentControllerTest).isNotNull();
+        assertThat(studentControllerTest).isNotNull();
     }
 
     @Test
@@ -55,8 +67,8 @@ public class StudentControllerTestRestTemplate {
         Student student = new Student();
         student.setName("Test");
         student.setAge(25);
-        student = studentRepositoryTest.save(student);
-        Assertions.assertThat(testRestTemplate.getForObject("http://localhost:" + port
+        studentRepositoryTest.save(student);
+        assertThat(testRestTemplate.getForObject("http://localhost:" + port
                 + "/student/" + student.getId(), Student.class)).isNotNull();
     }
 
@@ -70,7 +82,7 @@ public class StudentControllerTestRestTemplate {
         studentB.setAge(22);
         studentRepositoryTest.save(studentA);
         studentRepositoryTest.save(studentB);
-        Assertions.assertThat(testRestTemplate.getForObject("http://localhost:" + port
+        assertThat(testRestTemplate.getForObject("http://localhost:" + port
                 + "/student/find?minAge=" + studentA.getAge() +
                 "&maxAge=" + studentB.getAge(), Collection.class)).isNotNull();
     }
@@ -84,7 +96,7 @@ public class StudentControllerTestRestTemplate {
         student.setFaculty(faculty);
         studentRepositoryTest.save(student);
 
-        Assertions.assertThat(testRestTemplate.getForObject("http://localhost:" + port
+        assertThat(testRestTemplate.getForObject("http://localhost:" + port
                 + "/student/faculty/)" + student.getId(), Faculty.class)).isNotNull();
     }
 
@@ -101,7 +113,7 @@ public class StudentControllerTestRestTemplate {
 
         List<Student> students = new ArrayList<>(List.of(studentA, studentB));
 
-        Assertions.assertThat(testRestTemplate.getForObject("http://localhost:" + port
+        assertThat(testRestTemplate.getForObject("http://localhost:" + port
                 + "/student/all", Collection.class)).isNotNull();
     }
 
@@ -118,7 +130,7 @@ public class StudentControllerTestRestTemplate {
         avatar.setData(avatarData);
         avatarRepositoryTest.save(avatar);
 
-        Assertions.assertThat(testRestTemplate.getForObject("http://localhost:" + port
+        assertThat(testRestTemplate.getForObject("http://localhost:" + port
                 + "/student/1/avatar/preview", byte[].class)).isNotNull();
     }
 
@@ -139,7 +151,7 @@ public class StudentControllerTestRestTemplate {
         avatar.setData(avatarData);
         avatar.setMediaType(mediaType);
         avatarRepositoryTest.save(avatar);
-        Assertions.assertThat(testRestTemplate.getForObject("http://localhost:" + port
+        assertThat(testRestTemplate.getForObject("http://localhost:" + port
                 + "/student/" + student.getId() + "/avatar", String.class)).isNotNull();
     }
 
@@ -149,9 +161,8 @@ public class StudentControllerTestRestTemplate {
         student.setId(1L);
         student.setName("Иван");
         student.setAge(20);
-        Assertions
-                .assertThat(testRestTemplate.postForObject("http://localhost:" + port +
-                        "/student", student, Student.class)).isNotNull();
+        assertThat(testRestTemplate.postForObject("http://localhost:" + port +
+                "/student", student, Student.class)).isNotNull();
     }
 
     @Test
@@ -168,9 +179,8 @@ public class StudentControllerTestRestTemplate {
         avatar.setData(avatarData);
         avatar.setMediaType(mediaType);
         avatarRepositoryTest.save(avatar);
-        Assertions
-                .assertThat(testRestTemplate.postForObject("http://localhost:" + port +
-                        "/student/" + student.getId() + "/avatar", avatar, String.class)).isNotNull();
+        assertThat(testRestTemplate.postForObject("http://localhost:" + port +
+                "/student/" + student.getId() + "/avatar", avatar, String.class)).isNotNull();
     }
 
     @Test
@@ -179,7 +189,7 @@ public class StudentControllerTestRestTemplate {
         student.setId(1L);
         student.setName("Иван");
         student.setAge(20);
-        Assertions.assertThat(testRestTemplate.exchange("http://localhost:" + port + "/student",
+        assertThat(testRestTemplate.exchange("http://localhost:" + port + "/student",
                 HttpMethod.PUT,
                 new HttpEntity<>(student), Student.class).getBody()).isNotNull();
     }
@@ -194,7 +204,7 @@ public class StudentControllerTestRestTemplate {
 
         testRestTemplate.delete("http://localhost:" + port + "/student/" + student.getId());
 
-        Assertions.assertThat(testRestTemplate.getForObject("http://localhost:" + port
+        assertThat(testRestTemplate.getForObject("http://localhost:" + port
                 + "/student/" + student.getId(), Student.class).getId()).isNull();
     }
 
