@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/student")
@@ -76,6 +77,28 @@ public class StudentController {
             is.transferTo(os);
         }
         return ResponseEntity.ok("loaded successfully");
+    }
+
+    @GetMapping(path = "/quantity")
+    public Integer numberOfAllStudents() {
+        return studentService.getNumberOfAllStudents();
+    }
+
+    @GetMapping(path = "age/average")
+    public Integer getAverageAgeStudents() {
+        return studentService.getAverageAgeStudents();
+
+    }
+
+    @GetMapping(path = "/last")
+    public List<Student> getLastFiveStudents() {
+        return studentService.getLastFiveStudents();
+    }
+
+    @GetMapping(path = "/page")
+    public List<Student> getAllPage(@RequestParam("numberPage") Integer numberPage, @RequestParam("sizePage")
+    Integer sizePage) {
+        return studentService.getAllPage(numberPage, sizePage);
     }
 
     @PostMapping

@@ -1,7 +1,9 @@
 package ru.hogwarts.school.service;
 
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.exception.EntityNotFoundException;
@@ -16,6 +18,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -113,6 +116,35 @@ public class StudentService {
 
     public Avatar findAvatar(long studentId) {
         return avatarRepository.findByStudentId(studentId).orElseThrow();
+    }
+
+    public Integer getNumberOfAllStudents() {
+        Integer studentQuantity = studentRepository.getCountAllStudents();
+        if (studentQuantity == null) {
+            throw new EntityNotFoundException();
+        }
+        return studentQuantity;
+    }
+
+    public Integer getAverageAgeStudents() {
+        Integer averageAgeStudents = studentRepository.getAverageAgeStudents();
+        if (averageAgeStudents == null) {
+            throw new EntityNotFoundException();
+        }
+        return averageAgeStudents;
+    }
+
+    public List<Student> getLastFiveStudents() {
+        List<Student> students = studentRepository.getLastFiveStudents();
+        if (students.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        return students;
+    }
+
+    public List<Student> getAllPage(Integer numberPage, Integer sizePage) {
+        PageRequest pageRequest = PageRequest.of(numberPage, sizePage);
+        return studentRepository.findAll(pageRequest).getContent();
     }
 
 }
