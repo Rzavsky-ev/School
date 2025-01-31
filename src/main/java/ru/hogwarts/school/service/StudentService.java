@@ -143,7 +143,7 @@ public class StudentService {
     }
 
     public List<Student> getAllPage(Integer numberPage, Integer sizePage) {
-        PageRequest pageRequest = PageRequest.of(numberPage, sizePage);
+        PageRequest pageRequest = PageRequest.of(numberPage-1, sizePage);
         return studentRepository.findAll(pageRequest).getContent();
     }
 
