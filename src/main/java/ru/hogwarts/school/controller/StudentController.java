@@ -95,11 +95,6 @@ public class StudentController {
         return studentService.getLastFiveStudents();
     }
 
-    @GetMapping(path = "/page")
-    public List<Student> getAllPage(@RequestParam("numberPage") Integer numberPage, @RequestParam("sizePage")
-    Integer sizePage) {
-        return studentService.getAllPage(numberPage, sizePage);
-    }
 
     @PostMapping
     public Student addStudents(@RequestBody Student student) {

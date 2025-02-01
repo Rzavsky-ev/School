@@ -1,9 +1,7 @@
 package ru.hogwarts.school.service;
 
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.exception.EntityNotFoundException;
@@ -140,11 +138,6 @@ public class StudentService {
             throw new EntityNotFoundException();
         }
         return students;
-    }
-
-    public List<Student> getAllPage(Integer numberPage, Integer sizePage) {
-        PageRequest pageRequest = PageRequest.of(numberPage-1, sizePage);
-        return studentRepository.findAll(pageRequest).getContent();
     }
 
 }
