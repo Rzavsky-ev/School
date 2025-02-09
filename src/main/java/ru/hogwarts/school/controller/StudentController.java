@@ -95,6 +95,15 @@ public class StudentController {
         return studentService.getLastFiveStudents();
     }
 
+    @GetMapping(path = "/startingLetter")
+    public List<Student> getStudentsNameStartingLetter(@RequestParam(required = false) String firstLetter) {
+        return studentService.getStudentsNameStartingLetter(firstLetter);
+    }
+
+    @GetMapping(path = "averageAge")
+    public Double getAverageAgeOfStudents() {
+        return studentService.getAverageAgeOfStudents();
+    }
 
     @PostMapping
     public Student addStudents(@RequestBody Student student) {

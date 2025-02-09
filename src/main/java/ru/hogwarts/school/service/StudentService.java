@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -166,4 +167,27 @@ public class StudentService {
         return students;
     }
 
+    public List<Student> getStudentsNameStartingLetter(String firstLetter) {
+        if (firstLetter.isEmpty()) {
+            logger.info("Empty string");
+            throw new EntityNotFoundException();
+        }
+        List<Student> students = studentRepository.findAll().stream().
+                filter(student -> student.getName().toUpperCase().startsWith(firstLetter.toUpperCase())).
+                toList();
+        if (students.isEmpty()) {
+            logger.warn("The database is empty");
+            throw new EntityNotFoundException();
+        }
+        return students;
+    }
+
+    public Double getAverageAgeOfStudents() {
+        List<Student> students = studentRepository.findAll();
+        if (students.isEmpty()) {
+            logger.warn("The database is empty");
+            throw new EntityNotFoundException();
+        }
+        return students.stream().collect(Collectors.averagingDouble(Student::getAge));
+    }
 }

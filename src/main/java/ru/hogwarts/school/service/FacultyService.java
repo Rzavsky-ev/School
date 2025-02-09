@@ -10,6 +10,9 @@ import ru.hogwarts.school.repository.FacultyRepository;
 
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Stream;
 
 
 @Service
@@ -87,6 +90,21 @@ public class FacultyService {
         facultyRepository.delete(facultyRemove);
         logger.info("Faculty remove");
         return facultyRemove;
+    }
+
+    public String getLongestName() {
+        List<Faculty> faculties = facultyRepository.findAll();
+        if (faculties.isEmpty()) {
+            logger.warn("The database is empty");
+            throw new EntityNotFoundException();
+        }
+        return faculties.stream().max(Comparator.comparingInt
+                (faculty -> faculty.getName().length())).get().getName();
+    }
+
+    public Integer getSum() {
+        return Stream.iterate(1, a -> a + 1).
+                limit(1_000_000).parallel().reduce(0, Integer::sum);
     }
 }
 
