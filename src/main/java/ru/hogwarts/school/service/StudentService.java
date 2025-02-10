@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -189,5 +190,40 @@ public class StudentService {
             throw new EntityNotFoundException();
         }
         return students.stream().collect(Collectors.averagingDouble(Student::getAge));
+    }
+
+    public void printNamesSixStudentsParallel() {
+        List<Student> sixStudents = studentRepository.getSixStudents();
+        if (sixStudents.isEmpty()) {
+            logger.warn("The database is empty");
+            throw new EntityNotFoundException();
+        } else if (sixStudents.size() < 6) {
+            logger.warn("There are less than six students");
+            throw new EntityNotFoundException();
+        }
+        System.out.println(sixStudents.get(0).getName() + " " + sixStudents.get(1).getName());
+        new Thread(() -> System.out.println(sixStudents.get(2).getName() + " " + sixStudents.get(3).getName())).start();
+        new Thread(() -> System.out.println(sixStudents.get(4).getName() + " " + sixStudents.get(5).getName())).start();
+    }
+
+    public void printNamesSixStudentsParallelSynchronized() {
+        List<Student> sixStudents = studentRepository.getSixStudents();
+        if (sixStudents.isEmpty()) {
+            logger.warn("The database is empty");
+            throw new EntityNotFoundException();
+        } else if (sixStudents.size() < 6) {
+            logger.warn("There are less than six students");
+            throw new EntityNotFoundException();
+        }
+
+        System.out.println(sixStudents.get(0).getName() + " " + sixStudents.get(1).getName());
+
+        synchronized (this) {
+            new Thread(() -> System.out.println(sixStudents.get(2).getName() + " " + sixStudents.get(3).getName())).start();
+        }
+        synchronized (this) {
+            new Thread(() -> System.out.println(sixStudents.get(4).getName() + " " + sixStudents.get(5).getName())).start();
+        }
+
     }
 }
