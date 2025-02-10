@@ -38,6 +38,16 @@ public class FacultyController {
         return facultyService.getAll();
     }
 
+    @GetMapping(path = "/LongestName")
+    public String getLongestName() {
+        return facultyService.getLongestName();
+    }
+
+    @GetMapping(path = "/sum")
+    public Integer getSum() {
+        return facultyService.getSum();
+    }
+
     @PostMapping
     public Faculty addFaculties(@RequestBody Faculty faculty) {
         return facultyService.addFaculties(faculty);
