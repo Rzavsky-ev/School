@@ -20,6 +20,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
@@ -206,6 +209,18 @@ public class StudentService {
         new Thread(() -> System.out.println(sixStudents.get(4).getName() + " " + sixStudents.get(5).getName())).start();
     }
 
+    private synchronized void printStudentsFromQueue(BlockingQueue<Student> queue) {
+        while (!queue.isEmpty()) {
+            try {
+                Student student = queue.take();
+                System.out.println(student.getName() + " ");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+    }
+
     public void printNamesSixStudentsParallelSynchronized() {
         List<Student> sixStudents = studentRepository.getSixStudents();
         if (sixStudents.isEmpty()) {
@@ -216,14 +231,15 @@ public class StudentService {
             throw new EntityNotFoundException();
         }
 
-        System.out.println(sixStudents.get(0).getName() + " " + sixStudents.get(1).getName());
+        printStudentsFromQueue(new LinkedBlockingQueue<>(List.of(sixStudents.get(0), sixStudents.get(1))));
 
-        synchronized (this) {
-            new Thread(() -> System.out.println(sixStudents.get(2).getName() + " " + sixStudents.get(3).getName())).start();
-        }
-        synchronized (this) {
-            new Thread(() -> System.out.println(sixStudents.get(4).getName() + " " + sixStudents.get(5).getName())).start();
-        }
+        new Thread(() -> printStudentsFromQueue(new LinkedBlockingQueue<>(List.of(sixStudents.get(2), sixStudents.get(3)))))
+                .start();
 
+
+        new Thread(() -> printStudentsFromQueue(new LinkedBlockingQueue<>(List.of(sixStudents.get(4), sixStudents.get(5)))))
+                .start();
     }
+
+
 }
