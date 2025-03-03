@@ -1,11 +1,11 @@
-select *from student;
+SELECT * FROM student;
 
-select *from student where age>18 and age<20;
+SELECT * FROM student WHERE age > 18 AND age < 20;
 
-select name *from student;
+SELECT name FROM student;
 
-select  *from student where name like '%O%';
+SELECT  * FROM student WHERE name LIKE '%O%';
 
-select *from student where age<25;
+SELECT * FROM student WHERE age < 25;
 
-select  *from student ORDER BY age;
+SELECT  * FROM student ORDER BY age;
